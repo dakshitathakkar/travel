@@ -1,8 +1,7 @@
 package com.triptrace.travel.service.home;
 
 import com.triptrace.travel.core.constants.Month;
-import com.triptrace.travel.dao.entity.TopTravelDestination;
-import com.triptrace.travel.object.dto.TopTravelDestinationDTO;
+import com.triptrace.travel.dao.entities.TopTravelDestination;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ public interface HomeService {
      * @param country
      * @return
      */
-    List<TopTravelDestinationDTO> getTopTravelDestinations(String month, String country);
+    List<TopTravelDestination> getTopTravelDestinations(String month, String country);
 
     /**
      *

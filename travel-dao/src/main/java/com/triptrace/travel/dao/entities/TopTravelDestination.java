@@ -1,22 +1,23 @@
-package com.triptrace.travel.dao.entity;
+package com.triptrace.travel.dao.entities;
 
 import com.triptrace.travel.core.constants.Month;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "top_travel_destination")
-public class TopTravelDestination{
+public class TopTravelDestination implements Serializable {
+    private static final long serialVersionUID = 6523378609296366113L;
     private Integer destinationId;
     private Month month;
     private String country;
     private String city;
     private String state;
     private String description;
+    private String content;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,5 +75,14 @@ public class TopTravelDestination{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Transient
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

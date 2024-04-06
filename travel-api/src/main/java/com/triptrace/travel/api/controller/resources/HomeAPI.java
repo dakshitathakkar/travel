@@ -1,5 +1,6 @@
 package com.triptrace.travel.api.controller.resources;
 
+import com.triptrace.travel.object.converter.TopTravelDestinationConverter;
 import com.triptrace.travel.object.dto.TopTravelDestinationDTO;
 import com.triptrace.travel.service.home.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,6 @@ public class HomeAPI {
     @GetMapping("home")
     public List<TopTravelDestinationDTO> getSample(@RequestParam(name = "month") String month,
                                                    @RequestParam(name = "country") String country){
-        return homeService.getTopTravelDestinations(month, country);
+        return TopTravelDestinationConverter.entityListToDTOList(homeService.getTopTravelDestinations(month, country));
     }
 }

@@ -2,7 +2,7 @@ package com.triptrace.travel.object.converter;
 
 import com.triptrace.travel.core.constants.Month;
 import com.triptrace.travel.core.utilities.NullUtilities;
-import com.triptrace.travel.dao.entity.TopTravelDestination;
+import com.triptrace.travel.dao.entities.TopTravelDestination;
 import com.triptrace.travel.object.dto.TopTravelDestinationDTO;
 
 import java.util.Collection;

@@ -4,12 +4,14 @@ import com.triptrace.travel.client.ChatBotRestClient;
 import com.triptrace.travel.core.constants.ApplicationConstant;
 import com.triptrace.travel.core.constants.Month;
 import com.triptrace.travel.core.utilities.NullUtilities;
-import com.triptrace.travel.dao.entity.TopTravelDestination;
-import com.triptrace.travel.dao.repository.TopTravelDestinationRepository;
+import com.triptrace.travel.dao.entities.TopTravelDestination;
+import com.triptrace.travel.dao.repositories.TopTravelDestinationRepository;
 import com.triptrace.travel.object.bo.ChatBotResponseBO;
 import com.triptrace.travel.object.dto.TopTravelDestinationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -29,38 +31,42 @@ public class HomeServiceImpl implements HomeService{
     }
 
     @Override
-    public List<TopTravelDestinationDTO> getTopTravelDestinations(String month, String country) {
+    public List<TopTravelDestination> getTopTravelDestinations(String month, String country) {
 
         List<TopTravelDestination> destinations = getAllDestinationsByMonthAndCountry(Month.valueOf(month),country);
-        if (NullUtilities.isNull(destinations)){
-            getDestinationsFromChatBOT(month,country);
+        if (CollectionUtils.isEmpty(destinations)){
+            destinations =  getDestinationsFromChatBOT(month,country);
         }
-        List<TopTravelDestinationDTO> topTravelDestinationDTOList = new LinkedList<>();
+       return destinations;
+    }
+
+    @Transactional
+    private List<TopTravelDestination> getDestinationsFromChatBOT(String month, String country) {
+        List<TopTravelDestination> topTravelDestinationDTOList = new LinkedList<>();
         String prompt = String.format(ApplicationConstant.HOME_API_PROMPT,month,country);
         ChatBotResponseBO chatBotResponseBO = chatBotRestClient.getChatResponse(prompt);
-        TopTravelDestinationDTO topTravelDestinationDTO = new TopTravelDestinationDTO();
-      //  topTravelDestinationDTO.setContent(chatBotResponseBO.getChoices().get(0).getMessage().getContent());
-            topTravelDestinationDTO.setContent(ApplicationConstant.HOME_API_SAMPLE_OUTPUT_TEST);
-       // topTravelDestinationDTOList.add(topTravelDestinationDTO);
+        TopTravelDestination topTravelDestinationDTO = new TopTravelDestination();
+          topTravelDestinationDTO.setContent(chatBotResponseBO.getChoices().get(0).getMessage().getContent());
+//        topTravelDestinationDTO.setContent(ApplicationConstant.HOME_API_SAMPLE_OUTPUT_TEST);
 
-       String[] contents = topTravelDestinationDTO.getContent().split("\\n");
+
+        String[] contents = topTravelDestinationDTO.getContent().split(ApplicationConstant.NEXT_LINE_DELIMITER);
         Arrays.stream(contents).forEach(content ->{
-            TopTravelDestinationDTO topTravelDestination = new TopTravelDestinationDTO();
-            String regex = "(\\w+),\\s(\\w+)\\s-\\s(.*)";
+            TopTravelDestination topTravelDestination = new TopTravelDestination();
+            String regex = ApplicationConstant.CHATBOT_OUTPUT_REGEX;
             Matcher matcher = Pattern.compile(regex).matcher(content);
             if (matcher.find()){
-                topTravelDestination.setCityName(matcher.group(1));
-                topTravelDestination.setStateName(matcher.group(2));
+                topTravelDestination.setCity(matcher.group(1));
+                topTravelDestination.setState(matcher.group(2));
                 topTravelDestination.setDescription(matcher.group(3));
+                topTravelDestination.setMonth(Month.valueOf(month));
+                topTravelDestination.setCountry(country);
                 topTravelDestinationDTOList.add(topTravelDestination);
+                topTravelDestinationRepository.save(topTravelDestination);
             }
 
         });
-        System.out.println(topTravelDestinationDTOList.size());
-        return topTravelDestinationDTOList;
-    }
-
-    private void getDestinationsFromChatBOT(String month, String country) {
+      return topTravelDestinationDTOList;
     }
 
     @Override

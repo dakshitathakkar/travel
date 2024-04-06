@@ -1,4 +1,4 @@
-package com.triptrace.travel.dao.repository;
+package com.triptrace.travel.dao.repositories;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
