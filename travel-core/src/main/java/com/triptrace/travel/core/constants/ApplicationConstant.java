@@ -10,4 +10,7 @@ public class ApplicationConstant {
 
     public static final String CHATBOT_OUTPUT_REGEX = "(\\w+),\\s(\\w+)\\s-\\s(.*)";
     public static final String NEXT_LINE_DELIMITER = "\\n";
+
+    //Email
+    public static final String MAIL_SENDER_EMAIL = "spring.mail.email";
 }

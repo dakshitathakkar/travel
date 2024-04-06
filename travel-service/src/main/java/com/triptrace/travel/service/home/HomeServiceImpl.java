@@ -4,10 +4,11 @@ import com.triptrace.travel.client.ChatBotRestClient;
 import com.triptrace.travel.core.constants.ApplicationConstant;
 import com.triptrace.travel.core.constants.Month;
 import com.triptrace.travel.core.utilities.NullUtilities;
+import com.triptrace.travel.dao.entities.Subscriber;
 import com.triptrace.travel.dao.entities.TopTravelDestination;
+import com.triptrace.travel.dao.repositories.SubscriberRepository;
 import com.triptrace.travel.dao.repositories.TopTravelDestinationRepository;
 import com.triptrace.travel.object.bo.ChatBotResponseBO;
-import com.triptrace.travel.object.dto.TopTravelDestinationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +21,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@Transactional(readOnly = true)
 public class HomeServiceImpl implements HomeService{
     private final ChatBotRestClient chatBotRestClient;
     private final TopTravelDestinationRepository topTravelDestinationRepository;
+    private final SubscriberRepository subscriberRepository;
 
     @Autowired
-    public HomeServiceImpl(ChatBotRestClient chatBotRestClient, TopTravelDestinationRepository topTravelDestinationRepository) {
+    public HomeServiceImpl(ChatBotRestClient chatBotRestClient, TopTravelDestinationRepository topTravelDestinationRepository, SubscriberRepository subscriberRepository) {
         this.chatBotRestClient = chatBotRestClient;
         this.topTravelDestinationRepository = topTravelDestinationRepository;
+        this.subscriberRepository = subscriberRepository;
     }
 
     @Override
@@ -72,5 +76,29 @@ public class HomeServiceImpl implements HomeService{
     @Override
     public List<TopTravelDestination> getAllDestinationsByMonthAndCountry(Month month, String country) {
         return topTravelDestinationRepository.findAllByMonthAndCountry(month,country);
+    }
+
+    @Override
+    @Transactional
+    public void subscribeEmailToNewsletter(Subscriber subscriber) {
+        Subscriber currentSubscriber = getSubscriberByEmail(subscriber.getEmail());
+        if (NullUtilities.isNull(currentSubscriber)){
+            currentSubscriber = new Subscriber();
+
+        }
+        updateSubsriber(subscriber, currentSubscriber);
+    }
+
+    @Override
+    @Transactional
+    public Subscriber updateSubsriber(Subscriber subscriberParams, Subscriber currentSubscriber) {
+        currentSubscriber.setEmail(subscriberParams.getEmail());
+        currentSubscriber.setStatus(subscriberParams.getStatus());
+        return subscriberRepository.save(currentSubscriber);
+    }
+
+    @Override
+    public Subscriber getSubscriberByEmail(String email) {
+        return subscriberRepository.findAllByEmail(email);
     }
 }

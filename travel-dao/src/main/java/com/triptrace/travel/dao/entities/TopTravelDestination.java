@@ -1,5 +1,6 @@
 package com.triptrace.travel.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.triptrace.travel.core.constants.Month;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "top_travel_destination")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TopTravelDestination implements Serializable {
     private static final long serialVersionUID = 6523378609296366113L;
     private Integer destinationId;

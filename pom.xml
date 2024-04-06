@@ -22,6 +22,7 @@
 		<module>travel-client</module>
         <module>travel-core</module>
 		<module>travel-dao</module>
+		<module>travel-mail</module>
 	</modules>
     <properties>
 		<java.version>17</java.version>
