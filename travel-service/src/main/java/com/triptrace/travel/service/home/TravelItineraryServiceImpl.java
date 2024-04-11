@@ -18,9 +18,6 @@ public class TravelItineraryServiceImpl implements TravelItineraryService{
 
     @Override
     public TravelItineraryDTO getTravelItineraryWithFilters(TravelItineraryDTO travelItineraryDTO) {
-//        "Give me a travel itinerary with the following filter: Month: %s, " +
-//                "Continent: %s, Country: %s, Weather: %s, Days: %s, Budget: %s " +
-//                "Travelling with: %s, Resident of:%s";
         String prompt = String.format(ApplicationConstant.TRAVEL_ITINERARY_PROMPT,travelItineraryDTO.getMonth(),travelItineraryDTO.getContinent(),
                 travelItineraryDTO.getCountry(),travelItineraryDTO.getWeather(),travelItineraryDTO.getDays(),travelItineraryDTO.getBudget(),
                 travelItineraryDTO.getTravelPartners(),travelItineraryDTO.getResidentOf());
