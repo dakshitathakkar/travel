@@ -9,11 +9,19 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Class to get data from Gemini AI Model
+ */
 @Component
 public class GeminiRestClient extends BaseRestClient{
    @Value("${gemini.api.url}")
     private String apiUrl;
 
+    /**
+     * Method to get chat response
+     * @param text
+     * @return
+     */
    public GeminiResponseBO getChatResponse(String text){
        PartBO partBO = new PartBO(text);
        ContentBO contentBO = new ContentBO(List.of(partBO));

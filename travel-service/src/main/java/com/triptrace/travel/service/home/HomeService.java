@@ -17,7 +17,7 @@ public interface HomeService {
     List<TopTravelDestination> getTopTravelDestinations(String month, String country);
 
     /**
-     *
+     * Method to get destinations from database
      * @param month
      * @param country
      * @return
@@ -30,7 +30,18 @@ public interface HomeService {
      */
     void subscribeEmailToNewsletter(Subscriber subscriber);
 
+    /**
+     * Method to update subscriber details
+     * @param subscriberParams
+     * @param currentSubscriber
+     * @return
+     */
     Subscriber updateSubsriber(Subscriber subscriberParams, Subscriber currentSubscriber);
 
+    /**
+     * Method to fetch subscriber details from database
+     * @param email
+     * @return
+     */
     Subscriber getSubscriberByEmail(String email);
 }

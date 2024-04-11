@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * API Class for dashboard
+ */
 @RestController
 @RequestMapping("rest/v1")
 public class HomeAPI {
@@ -26,12 +29,23 @@ public class HomeAPI {
         this.newsletterMail = newsletterMail;
     }
 
+    /**
+     * API to get top travel destinations of the month w.r.t country
+     * @param month
+     * @param country
+     * @return
+     */
     @GetMapping("home")
     public List<TopTravelDestinationDTO> topTravelDestinations(@RequestParam(name = "month") String month,
                                                    @RequestParam(name = "country") String country){
         return TopTravelDestinationConverter.entityListToDTOList(homeService.getTopTravelDestinations(month, country));
     }
 
+    /**
+     * API to subscribe/unsubscribe newsletter
+     * @param subscriberDTO
+     * @return
+     */
     @PostMapping("newsletter")
     public String subscribeToNewsletter(@Validated @RequestBody SubscriberDTO subscriberDTO){
         Subscriber subscriber = SubscriberConverter.dtoToEntity(subscriberDTO);
@@ -39,6 +53,10 @@ public class HomeAPI {
         return "Subscribed to newsletter succesfully!!";
     }
 
+    /**
+     * Sample email API
+     * @return
+     */
     @GetMapping("email")
     public String unsubscribeToNewsletter(){
         newsletterMail.sendEmailNotification(MailType.WELCOME_EMAIL);
