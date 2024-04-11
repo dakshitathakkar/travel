@@ -1,7 +1,7 @@
-package com.triptrace.travel.dao.repository;
+package com.triptrace.travel.dao.repositories;
 
 import com.triptrace.travel.core.constants.Month;
-import com.triptrace.travel.dao.entity.TopTravelDestination;
+import com.triptrace.travel.dao.entities.TopTravelDestination;
 
 import java.util.List;
 

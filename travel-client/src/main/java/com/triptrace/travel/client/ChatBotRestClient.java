@@ -10,6 +10,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+/**
+ * Class to get data from ChatGPT AI Model
+ */
 @Component
 public class ChatBotRestClient extends BaseRestClient{
     @Value("${openai.chatgtp.api.key}")
@@ -43,8 +46,12 @@ public class ChatBotRestClient extends BaseRestClient{
         return restTemplate;
     }
 
+    /**
+     * Method to get chat response
+     * @param prompt
+     * @return
+     */
     public ChatBotResponseBO getChatResponse(String prompt) {
-
         ChatBotRequestBO request = new ChatBotRequestBO(model,
                 List.of(new MessageDTO("user", prompt)),
                 maxCompletions,
