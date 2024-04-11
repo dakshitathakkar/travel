@@ -1,6 +1,6 @@
 package com.triptrace.travel.service.home;
 
-import com.triptrace.travel.client.ChatBotRestClient;
+import com.triptrace.travel.client.GeminiRestClient;
 import com.triptrace.travel.core.constants.ApplicationConstant;
 import com.triptrace.travel.core.constants.Month;
 import com.triptrace.travel.core.utilities.NullUtilities;
@@ -8,7 +8,7 @@ import com.triptrace.travel.dao.entities.Subscriber;
 import com.triptrace.travel.dao.entities.TopTravelDestination;
 import com.triptrace.travel.dao.repositories.SubscriberRepository;
 import com.triptrace.travel.dao.repositories.TopTravelDestinationRepository;
-import com.triptrace.travel.object.bo.ChatBotResponseBO;
+import com.triptrace.travel.object.bo.GeminiResponseBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,18 +23,19 @@ import java.util.regex.Pattern;
 @Service
 @Transactional(readOnly = true)
 public class HomeServiceImpl implements HomeService{
-    private final ChatBotRestClient chatBotRestClient;
     private final TopTravelDestinationRepository topTravelDestinationRepository;
     private final SubscriberRepository subscriberRepository;
+    private final GeminiRestClient geminiRestClient;
 
     @Autowired
-    public HomeServiceImpl(ChatBotRestClient chatBotRestClient, TopTravelDestinationRepository topTravelDestinationRepository, SubscriberRepository subscriberRepository) {
-        this.chatBotRestClient = chatBotRestClient;
+    public HomeServiceImpl(TopTravelDestinationRepository topTravelDestinationRepository, SubscriberRepository subscriberRepository, GeminiRestClient geminiRestClient) {
         this.topTravelDestinationRepository = topTravelDestinationRepository;
         this.subscriberRepository = subscriberRepository;
+        this.geminiRestClient = geminiRestClient;
     }
 
     @Override
+    @Transactional
     public List<TopTravelDestination> getTopTravelDestinations(String month, String country) {
 
         List<TopTravelDestination> destinations = getAllDestinationsByMonthAndCountry(Month.valueOf(month),country);
@@ -48,9 +49,9 @@ public class HomeServiceImpl implements HomeService{
     private List<TopTravelDestination> getDestinationsFromChatBOT(String month, String country) {
         List<TopTravelDestination> topTravelDestinationDTOList = new LinkedList<>();
         String prompt = String.format(ApplicationConstant.HOME_API_PROMPT,month,country);
-        ChatBotResponseBO chatBotResponseBO = chatBotRestClient.getChatResponse(prompt);
+        GeminiResponseBO chatBotResponseBO = geminiRestClient.getChatResponse(prompt);
         TopTravelDestination topTravelDestinationDTO = new TopTravelDestination();
-          topTravelDestinationDTO.setContent(chatBotResponseBO.getChoices().get(0).getMessage().getContent());
+          topTravelDestinationDTO.setContent(chatBotResponseBO.getCandidates().get(0).getContent().getParts().get(0).getText());
 //        topTravelDestinationDTO.setContent(ApplicationConstant.HOME_API_SAMPLE_OUTPUT_TEST);
 
 

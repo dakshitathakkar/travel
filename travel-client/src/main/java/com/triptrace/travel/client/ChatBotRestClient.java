@@ -44,7 +44,6 @@ public class ChatBotRestClient extends BaseRestClient{
     }
 
     public ChatBotResponseBO getChatResponse(String prompt) {
-
         ChatBotRequestBO request = new ChatBotRequestBO(model,
                 List.of(new MessageDTO("user", prompt)),
                 maxCompletions,
