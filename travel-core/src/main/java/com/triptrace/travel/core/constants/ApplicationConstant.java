@@ -14,4 +14,8 @@ public class ApplicationConstant {
 
     //Email
     public static final String MAIL_SENDER_EMAIL = "spring.mail.email";
+
+    //logging
+    public static final String PRE_MESSAGE = "Entered in %s.%s() ";
+    public static final String POST_MESSAGE = "Exit from %s.%s(..);";
 }
